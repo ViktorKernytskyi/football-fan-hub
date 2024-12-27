@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tickets', function (Blueprint $table) {
+        Schema::create('clients', function (Blueprint $table) {
             $table->integer('id')->autoIncrement()->primary();
-            $table->foreign('match_id')->references('id')->on('matches')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('seat_number');
-            $table->decimal('price', 8, 2)->default(0);
-
+            $table->string('client_name');
+            $table->string('password');
+            $table->string('email')->unique();
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('clients');
     }
 };
