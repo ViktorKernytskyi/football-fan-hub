@@ -20,6 +20,11 @@ class FootballMatch extends Model
         'stadium',
 
     ];
+
+    protected $casts = [
+        'match_date' => 'datetime', // automatically converts match_date to a Carbon object
+    ];
+
     // Defining a relationship with the ticket table - Визначення зв'язку з таблицею квитків
     public function tickets()
     {
