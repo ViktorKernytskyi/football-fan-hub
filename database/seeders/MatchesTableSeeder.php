@@ -31,5 +31,8 @@ class MatchesTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ]);
+
+        // Using a factory to generate 10 random matches - Використання фабрики для створення 10 випадкових матчів
+        \App\Models\FootballMatch::factory(10)->create();
     }
 }
