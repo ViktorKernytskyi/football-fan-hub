@@ -10,8 +10,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Home page with upcoming matches - Головна сторінка з майбутніми матчами
+Route::get('/', [MatchController::class, 'index'])->name('matches.home');
+Route::get('/matches', [MatchController::class, 'index'])->name('matches.index');// page that displays a list of matches
 
-Route::get('/matches', [MatchController::class, 'index'])->name('matches.index');
 Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
 
 Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
