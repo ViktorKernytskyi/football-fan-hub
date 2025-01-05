@@ -28,7 +28,7 @@ class FootballMatch extends Model
     // Defining a relationship with the ticket table - Визначення зв'язку з таблицею квитків
     public function tickets()
     {
-        return $this->hasMany(Ticket::class);
+        return $this->hasMany(Ticket::class, 'match_id');
     }
 
 }

@@ -37,4 +37,14 @@ class MatchController extends Controller
             ->get();
 
     }
+
+    // Метод для відображення деталей матчу
+    public function show($id)
+    {
+        $match = FootballMatch::with(['tickets' => function ($query) {
+            $query->whereNull('client_id'); // Тільки доступні квитки
+        }])->findOrFail($id);
+echo "rerer";
+        return view('matches.show', compact('match'));
+    }
 }

@@ -13,6 +13,8 @@ Route::get('/', function () {
 // Home page with upcoming matches - Головна сторінка з майбутніми матчами
 Route::get('/', [MatchController::class, 'index'])->name('matches.home');
 Route::get('/matches', [MatchController::class, 'index'])->name('matches.index');// page that displays a list of matches
+Route::get('/matches/{id}', [MatchController::class, 'show'])->name('matches.show');
+
 
 Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
 
@@ -21,6 +23,7 @@ Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store
 Route::get('/tickets/{id}', [TicketController::class, 'show'])->name('tickets.show');
 Route::put('/tickets/{id}', [TicketController::class, 'update'])->name('tickets.update');
 Route::delete('/tickets/{id}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+Route::post('/tickets/{id}/purchase', [TicketController::class, 'purchase'])->name('tickets.purchase');
 
 
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
