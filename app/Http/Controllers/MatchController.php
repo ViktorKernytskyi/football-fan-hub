@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\FootballMatch;
 
@@ -41,10 +42,13 @@ class MatchController extends Controller
     // Метод для відображення деталей матчу
     public function show($id)
     {
-        $match = FootballMatch::with(['tickets' => function ($query) {
-            $query->whereNull('client_id'); // Тільки доступні квитки
-        }])->findOrFail($id);
-echo "rerer";
-        return view('matches.show', compact('match'));
+        // Знаходимо матч разом із стадіоном і квитками
+        $match = FootballMatch::with('stadium', 'tickets')->findOrFail($id);
+
+        // Рахуємо продані та доступні квитки
+        $soldTickets = Ticket::soldTickets($id);
+        $availableTickets = Ticket::availableTickets($id, $match->stadium->seat_count);
+
+        return view('matches.show', compact('match', 'soldTickets', 'availableTickets'));
     }
 }

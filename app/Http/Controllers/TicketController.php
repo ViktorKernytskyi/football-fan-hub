@@ -18,7 +18,7 @@ class TicketController extends Controller
     {
         $ticket = Ticket::findOrFail($id);
 
-        if ($ticket->client_id) {
+        if ($ticket->client_id !== null) {
             return back()->withErrors(['error' => 'This ticket is no longer available.']);
         }
 
