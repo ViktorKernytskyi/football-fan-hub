@@ -17,7 +17,7 @@ class FootballMatch extends Model
         'team_home',
         'team_away',
         'match_date',
-        'stadium',
+        'stadium_id',
 
     ];
 
@@ -29,6 +29,11 @@ class FootballMatch extends Model
     public function tickets()
     {
         return $this->hasMany(Ticket::class, 'match_id');
+    }
+    // Відношення до стадіонів
+    public function stadium()
+    {
+        return $this->belongsTo(Stadium::class);
     }
 
 }
