@@ -12,7 +12,7 @@ class Ticket extends Model
     // Fields that can be filled in bulk - Поля, які можуть бути заповнені масово.
     protected $fillable = [
         'match_id',
-        'user_id',
+        'client_id',
         'seat_number',
         'price',
     ];
@@ -27,5 +27,18 @@ class Ticket extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    // Обчислення проданих квитків
+    public static function soldTickets($matchId)
+    {
+        return self::where('match_id', $matchId)->whereNotNull('client_id')->count();
+    }
+
+    // Обчислення доступних квитків
+    public static function availableTickets($matchId, $stadiumSeats)
+    {
+        $soldTickets = self::soldTickets($matchId);
+        return $stadiumSeats - $soldTickets;
     }
 }
