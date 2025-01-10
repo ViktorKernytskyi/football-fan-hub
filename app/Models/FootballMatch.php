@@ -33,7 +33,7 @@ class FootballMatch extends Model
     // Відношення до стадіонів
     public function stadium()
     {
-        return $this->belongsTo(Stadium::class);
+        return $this->belongsTo(Stadium::class,  'stadium_id', 'id');
     }
 
 }

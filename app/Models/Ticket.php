@@ -36,9 +36,9 @@ class Ticket extends Model
     }
 
     // Обчислення доступних квитків
-    public static function availableTickets($matchId, $stadiumSeats)
+    public static function availableTickets($matchId, $seatCount)
     {
         $soldTickets = self::soldTickets($matchId);
-        return $stadiumSeats - $soldTickets;
+        return $seatCount - $soldTickets;
     }
 }
