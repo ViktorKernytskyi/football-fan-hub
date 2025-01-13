@@ -43,6 +43,8 @@ class MatchController extends Controller
     public function show($id)
     {
         // Знаходимо матч разом із стадіоном і квитками
+//        $match = FootballMatch::with('stadium')->find(1);
+//        dd($match->stadium);
         $match = FootballMatch::with('stadium', 'tickets')->findOrFail($id);
 
         // Рахуємо продані та доступні квитки
