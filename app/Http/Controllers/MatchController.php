@@ -39,18 +39,40 @@ class MatchController extends Controller
 
     }
 
-    // Метод для відображення деталей матчу
+    private function getMatchDetails($id = null)
+    {
+        // If the ID is passed, we look for a matching match - Якщо ID передано, шукаємо відповідний матч
+        if ($id) {
+            $match = FootballMatch::with('stadium', 'tickets')->findOrFail($id);
+        } else {
+            // If ID is not passed, we take the first match as the default - Якщо ID не передано, беремо перший матч як дефолтний
+            $match = FootballMatch::with('stadium', 'tickets')->first();
+            if (!$match) {
+                abort(404, 'No matches found.');
+            }
+        }
+
+        // We count sold and available tickets - Рахуємо продані та доступні квитки
+        $soldTickets = Ticket::soldTickets($match->id);
+        $availableTickets = Ticket::availableTickets($match->id, $match->stadium->seat_count);
+
+        return [
+            'match' => $match,
+            'soldTickets' => $soldTickets,
+            'availableTickets' => $availableTickets,
+        ];
+    }
     public function show($id)
     {
-        // Знаходимо матч разом із стадіоном і квитками
-//        $match = FootballMatch::with('stadium')->find(1);
-//        dd($match->stadium);
-        $match = FootballMatch::with('stadium', 'tickets')->findOrFail($id);
-
-        // Рахуємо продані та доступні квитки
-        $soldTickets = Ticket::soldTickets($id);
-        $availableTickets = Ticket::availableTickets($id, $match->stadium->seat_count);
-
-        return view('matches.show', compact('match', 'soldTickets', 'availableTickets'));
+        $data = $this->getMatchDetails($id);
+        return view('matches.show', $data);
     }
+    public function showDefault()
+    {
+        $data = $this->getMatchDetails();
+        return view('matches.show', $data);
+    }
+
+
+
 }

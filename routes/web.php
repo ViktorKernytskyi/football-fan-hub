@@ -14,6 +14,7 @@ Route::get('/', function () {
 Route::get('/', [MatchController::class, 'index'])->name('matches.home');
 Route::get('/matches', [MatchController::class, 'index'])->name('matches.index');// page that displays a list of matches
 Route::get('/matches/{id}', [MatchController::class, 'show'])->name('matches.show');
+Route::get('/show', [MatchController::class, 'showDefault'])->name('matches.default');
 
 
 Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
