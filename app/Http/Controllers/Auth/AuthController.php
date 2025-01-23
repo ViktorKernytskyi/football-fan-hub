@@ -50,7 +50,24 @@ class AuthController extends Controller
         //\Auth::logout();
         return view('login_1');
     }
+public function loginValidate(Request $request)
+{
+    $this->validate($request, [
+        'email' => 'required|email',
+        'password' => 'required|min:6'
+    ]);
 
+    $user = User::where('email', $request->email)->first();
+    if ($user) {
+        if (Hash::check($request->password, $user->password)) {
+            auth()->loginUsingId($user->id);
+            return redirect('/')->with('success', 'Success! You are logged in');
+        }
+        return back()->with('failed', 'Failed! Invalid password');
+    }
+    return back()->with('failed', 'Failed! Invalid email');
+
+}
     public function forgotPassword( )
     {
         return view('forgot-password');
