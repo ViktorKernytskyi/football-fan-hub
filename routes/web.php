@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\TicketController;
@@ -30,3 +31,6 @@ Route::post('/tickets/{id}/purchase', [TicketController::class, 'purchase'])->na
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
+
+Route::get('register', [AuthController::class, 'register'])->name('register');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
