@@ -2,82 +2,77 @@
 
 namespace App\Http\Controllers\Auth;
 
+
+use Illuminate\View\View;
+namespace App\Http\Controllers\Auth;
+
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
-/**
- * @method validate(Request $request, string[] $array)
- */
 class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view(view: 'auth.login');
+        return view('auth.login');
     }
+
     /**
      * Register a new user
-     *
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse
      */
     public function register(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:6'
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6|confirmed'
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-        return view('auth.register');
+
+        Auth::login($user); // Автоматичний вхід після реєстрації
+
+        return redirect('/')->with('success', 'Registration successful! You are logged in.');
     }
 
-
-//    public function index(): View
-//    {
-//        return view('index');
-//
-//    }
-    public function login( )
+    public function login()
     {
-        //\Auth::logout();
         return view('auth.login');
     }
-public function loginValidate(Request $request)
-{
-    $this->validate($request, [
-        'email' => 'required|email',
-        'password' => 'required|min:6'
-    ]);
 
-    $user = User::where('email', $request->email)->first();
-    if ($user) {
-        if (Hash::check($request->password, $user->password)) {
-            auth()->loginUsingId($user->id);
-            return redirect('/')->with('success', 'Success! You are logged in');
+    public function loginValidate(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6'
+        ]);
+
+        if (Auth::attempt($request->only('email', 'password'))) {
+            return redirect('/')->with('success', 'Success! You are logged in.');
         }
-        return back()->with('failed', 'Failed! Invalid password');
-    }
-    return back()->with('failed', 'Failed! Invalid email');
 
-}
-    public function forgotPassword( )
-    {
-        return view('forgot-password');
+        return back()->withErrors(['email' => 'Invalid email or password.']);
     }
-//    public function forgotPasswordValidate( )
-//    {
-//        return view('forgot-password');
-//    }
-    public function updatePassword( )
+
+    public function forgotPassword()
     {
-        return view('reset-password');
+        return view('auth.forgot-password');
+    }
+
+    public function updatePassword()
+    {
+        return view('auth.reset-password');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/')->with('success', 'You have been logged out.');
     }
 }
