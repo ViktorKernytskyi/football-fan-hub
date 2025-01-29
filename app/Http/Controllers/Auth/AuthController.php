@@ -48,7 +48,7 @@ class AuthController extends Controller
     public function login( )
     {
         //\Auth::logout();
-        return view('login_1');
+        return view('auth.login');
     }
 public function loginValidate(Request $request)
 {
