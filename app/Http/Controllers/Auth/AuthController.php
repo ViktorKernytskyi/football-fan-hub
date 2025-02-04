@@ -7,6 +7,7 @@ use Illuminate\View\View;
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -53,11 +54,20 @@ class AuthController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
-            return redirect('/')->with('success', 'Success! You are logged in.');
-        }
+        $client = Client::where('email', $request->email)->first();
 
-        return back()->withErrors(['email' => 'Invalid email or password.']);
+        if ($client) {
+//            dd($request->email);
+//            dd($request->password);
+          //  dd($request->password, $client->password);
+            if (Hash::check($request->password, $client->password)) {
+                auth()->loginUsingId($client->id);
+                dd($request->password);
+                return redirect('/')->with('success', 'Success! You are logged in');
+            }
+            return back()->with('failed', 'Failed! Invalid password');
+        }
+        return back()->with('failed', 'Failed! Invalid email');
     }
 
     public function forgotPassword()
@@ -75,4 +85,9 @@ class AuthController extends Controller
         Auth::logout();
         return redirect('/')->with('success', 'You have been logged out.');
     }
+    public function registerForm()
+    {
+        return view('auth.register');
+    }
+
 }
