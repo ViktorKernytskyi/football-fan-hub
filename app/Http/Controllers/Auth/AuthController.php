@@ -26,18 +26,18 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'client_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|confirmed'
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
+        $client = Client::create([
+            'client_name' => $request->client_name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
 
-        Auth::login($user); // Автоматичний вхід після реєстрації
+        //Auth::login($client); // Автоматичний вхід після реєстрації
 
         return redirect('/')->with('success', 'Registration successful! You are logged in.');
     }
@@ -57,9 +57,7 @@ class AuthController extends Controller
         $client = Client::where('email', $request->email)->first();
 
         if ($client) {
-//            dd($request->email);
-//            dd($request->password);
-          //  dd($request->password, $client->password);
+
             if (Hash::check($request->password, $client->password)) {
                 auth()->loginUsingId($client->id);
                 dd($request->password);
