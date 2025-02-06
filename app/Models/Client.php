@@ -12,6 +12,7 @@ class Client extends Model
     // Fields that can be filled in bulk - Поля, які можуть бути заповнені масово.
     protected $fillable = [
         'username',
+        'client_name',
         'email',
         'password',
     ];
