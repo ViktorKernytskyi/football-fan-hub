@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Client extends Model
 {
     use HasFactory;
-
+    protected $table = 'clients'; // Name of the table in the database
     // Fields that can be filled in bulk - Поля, які можуть бути заповнені масово.
     protected $fillable = [
         'username',
