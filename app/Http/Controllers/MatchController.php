@@ -24,9 +24,10 @@ class MatchController extends Controller
     // Logic for the page with the full list of matches
     private function getAllMatches()
     {
-        return FootballMatch::where('match_date', '>=', now())
-            ->orderBy('match_date', 'asc')
-            ->get();
+        return FootballMatch::orderBy('match_date', 'asc')->get();
+//        return FootballMatch::where('match_date', '>=', now())
+//            ->orderBy('match_date', 'asc')
+//            ->get();
     }
 
     // Logic for the main page
