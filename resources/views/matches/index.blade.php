@@ -7,6 +7,13 @@
 </head>
 <body>
 <h1>Match Schedule</h1>
+@if (session('client'))
+    Привіт, {{ session('client')->client_name }}! Ви успішно увійшли
+@else
+    Привіт, Гість! Ви не увійшли
+@endif
+
+
 <table border="1">
     <thead>
     <tr>
