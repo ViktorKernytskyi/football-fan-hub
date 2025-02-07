@@ -38,6 +38,7 @@ Route::post('/login', [AuthController::class, 'loginValidate']);
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register'])->name('register');;
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('forgot-password', [AuthController::class, 'resetPassword'])->name('forgot-password');
+Route::post('login', [AuthController::class, 'loginValidate'])->name('login');
