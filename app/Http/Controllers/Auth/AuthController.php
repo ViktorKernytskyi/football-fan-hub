@@ -27,11 +27,11 @@ class AuthController extends Controller
     {
         $request->validate([
             'client_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:clients,email',
             'password' => 'required|min:6|confirmed'
         ]);
 
-        $client = Client::create([
+        Client::create([
             'client_name' => $request->client_name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
@@ -39,7 +39,7 @@ class AuthController extends Controller
 
         //Auth::login($client); // Автоматичний вхід після реєстрації
 
-        return redirect('/')->with('success', 'Registration successful! You are logged in.');
+        return redirect()->route('login')->withErrors('success', 'Registration successful! You are logged in.');
     }
 
     public function login()
@@ -59,14 +59,20 @@ class AuthController extends Controller
         if ($client) {
 
             if (Hash::check($request->password, $client->password)) {
+                //auth()->login($client);
                 auth()->loginUsingId($client->id);
-                dd($request->password);
-                return redirect('/')->with('success', 'Success! You are logged in');
+                session(['client' => $client]);
+             //   dd(session('client')); // додайте для перевірки, чи зберігаються дані користувача
+
+                // dd($request->password);
+                return redirect()->route('matches.index')->with('success',  'Привіт, ' . $client->client_name . '! Ви успішно увійшли' . 'Success! You are logged in', );
             }
             return back()->with('failed', 'Failed! Invalid password');
         }
         return back()->with('failed', 'Failed! Invalid email');
     }
+
+
 
     public function forgotPassword()
     {
