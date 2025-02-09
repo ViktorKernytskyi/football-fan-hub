@@ -9,9 +9,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\User;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Psy\Util\Str;
 
 class AuthController extends Controller
 {
@@ -78,7 +81,6 @@ class AuthController extends Controller
         return view('auth.forgot-password');
     }
 
-
     public function forgotPasswordValidate($token)
     {
         $client = Client::where('token', $token)->where('is_verified', 0)->first();
@@ -89,6 +91,30 @@ class AuthController extends Controller
         return redirect()->route('auth.forgot-password')->with('failed', 'Password reset link is expired');
     }
 
+    public function resetPassword(Request $request)
+    {
+        $request->validate($request, [
+            'email' => 'required|email',
+        ]);
+
+        $client = Client::where('email', $request->email)->first();
+        if (!$client) {
+            return back()->with('failed', 'Failed! email is not registered.');
+        }
+
+        $token = Str::random(60);
+
+        $client['token'] = $token;
+        $client['is_verified'] = 0;
+        $client->save();
+
+        Mail::to($request->email)->send(new ResetPassword($client->name, $token));
+
+        if(Mail::failures() != 0) {
+            return back()->with('success', 'Success! password reset link has been sent to your email');
+        }
+        return back()->with('failed', 'Failed! there is some issue with email provider');
+    }
 
     public function updatePassword()
     {
