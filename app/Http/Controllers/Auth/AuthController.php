@@ -86,7 +86,7 @@ class AuthController extends Controller
             $email = $client->email;
             return view('auth.change-password', compact('email'));
         }
-        return redirect()->route('forgot-password')->with('failed', 'Password reset link is expired');
+        return redirect()->route('auth.forgot-password')->with('failed', 'Password reset link is expired');
     }
 
 
