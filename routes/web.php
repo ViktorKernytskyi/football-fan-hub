@@ -48,6 +48,9 @@ Route::prefix('auth')->group(function () {
     Route::get('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
     Route::post('forgot-password', [AuthController::class, 'resetPassword'])->name('forgot-password');
     Route::get('forgot-password/{token}', [AuthController::class, 'forgotPasswordValidate']);
+
+    // Password update
+    Route::put('reset-password', [AuthController::class, 'updatePassword'])->name('reset-password');
 });
 
 
