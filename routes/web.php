@@ -32,19 +32,23 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 
-Route::get('register', [AuthController::class, 'register'])->name('register');
-Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register');;
+Route::prefix('auth')->group(function () {
+    // Registration
+    Route::get('register', [AuthController::class, 'registerForm'])->name('register');
+    Route::post('register', [AuthController::class, 'register'])->name('register');
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::post('login', [AuthController::class, 'loginValidate'])->name('login');
+    // Login
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [AuthController::class, 'loginValidate'])->name('login');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    // Entrance - Вихід
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
-Route::post('forgot-password', [AuthController::class, 'resetPassword'])->name('forgot-password');
-Route::get('forgot-password/{token}', [AuthController::class, 'forgotPasswordValidate']);
+    // Password recovery
+    Route::get('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+    Route::post('forgot-password', [AuthController::class, 'resetPassword'])->name('forgot-password');
+    Route::get('forgot-password/{token}', [AuthController::class, 'forgotPasswordValidate']);
+});
 
 
 
