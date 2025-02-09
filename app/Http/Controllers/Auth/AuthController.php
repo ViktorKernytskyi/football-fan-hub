@@ -93,7 +93,7 @@ class AuthController extends Controller
 
     public function resetPassword(Request $request)
     {
-        $request->validate($request, [
+        $request->validate([
             'email' => 'required|email',
         ]);
 
@@ -104,17 +104,20 @@ class AuthController extends Controller
 
         $token = Str::random(60);
 
-        $client['token'] = $token;
-        $client['is_verified'] = 0;
+        // Використовуємо властивості моделі
+        $client->token = $token;
+        $client->is_verified = 0;
         $client->save();
 
         Mail::to($request->email)->send(new ResetPassword($client->name, $token));
 
-        if(Mail::failures() != 0) {
+        // Перевірка на помилки при відправці листа
+        if (count(Mail::failures()) == 0) {
             return back()->with('success', 'Success! password reset link has been sent to your email');
         }
         return back()->with('failed', 'Failed! there is some issue with email provider');
     }
+
 
     public function updatePassword()
     {
