@@ -73,11 +73,22 @@ class AuthController extends Controller
     }
 
 
-
     public function forgotPassword()
     {
         return view('auth.forgot-password');
     }
+
+
+    public function forgotPasswordValidate($token)
+    {
+        $client = Client::where('token', $token)->where('is_verified', 0)->first();
+        if ($client) {
+            $email = $client->email;
+            return view('auth.change-password', compact('email'));
+        }
+        return redirect()->route('forgot-password')->with('failed', 'Password reset link is expired');
+    }
+
 
     public function updatePassword()
     {
