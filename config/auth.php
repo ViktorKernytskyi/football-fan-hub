@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'client' => [
+            'driver' => 'session',
+            'provider' => 'clients',  // Ось що потрібно використовувати
+
+        ],
     ],
 
     /*
@@ -66,10 +71,10 @@ return [
             'hash' => 'bcrypt',
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'clients' => [ // Додаємо провайдера для клієнтів
+            'driver' => 'eloquent',
+            'model' => App\Models\Client::class, // Має відповідати реальній моделі
+        ],
     ],
 
     /*
