@@ -41,11 +41,24 @@
                 <ul class="navbar-nav ms-auto">
                     <!-- Authentication Links -->
                     @guest
-                        @if (Route::has('login'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        @auth('client')
+                            <li>
+                                <a class="nav-link">
+                                    <form method="post" action="{{ route('logout') }}">
+                                        @csrf
+
+                                        <button type="submit" style="border: unset; background: white">
+                                            {{ "Hello " . auth('client')->user()->client_name }} /
+                                            <i class="fa fa-unlock"></i> Logout
+                                        </button>
+                                    </form>
+                                </a>
                             </li>
-                        @endif
+                        @endauth
+
+                        @guest('client')
+                            <li class="nav-item"><a class="nav-link" href="{{ route('login') }}"> <i class="fa fa-lock"></i> Login </a></li>
+                        @endguest
 
                         @if (Route::has('register'))
                             <li class="nav-item">
@@ -55,7 +68,8 @@
                     @else
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }}
+
+                                {{ " Hello " . Auth::guard('client')->user()->client_name  }}
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -72,6 +86,7 @@
                         </li>
                     @endguest
                 </ul>
+
             </div>
         </div>
     </nav>
