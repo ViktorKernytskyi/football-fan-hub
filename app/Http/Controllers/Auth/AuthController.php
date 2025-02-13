@@ -63,12 +63,16 @@ class AuthController extends Controller
 
             if (Hash::check($request->password, $client->password)) {
                 //auth()->login($client);
-                auth()->loginUsingId($client->id);
+               // auth()->loginUsingId($client->id);
+                //dd(Auth::guard('client')->user());
+
+                auth()->guard('client')->loginUsingId($client->id);
+
                 session(['client' => $client]);
              //   dd(session('client')); // додайте для перевірки, чи зберігаються дані користувача
 
                 // dd($request->password);
-                return redirect()->route('matches.index')->with('success',  'Привіт, ' . $client->client_name . '! Ви успішно увійшли' . 'Success! You are logged in', );
+                return redirect()->route('login')->with('success',  'Привіт, ' . $client->client_name . '! Ви успішно увійшли' . 'Success! You are logged in', );
             }
             return back()->with('failed', 'Failed! Invalid password');
         }
@@ -123,12 +127,16 @@ class AuthController extends Controller
     {
         return view('auth.reset-password');
     }
-
-    public function logout()
+    public function logout(Request $request)
     {
-        Auth::logout();
-        return redirect('/')->with('success', 'You have been logged out.');
+        Auth::guard('client')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
+
+
     public function registerForm()
     {
         return view('auth.register');
