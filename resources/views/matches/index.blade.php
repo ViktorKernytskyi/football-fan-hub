@@ -29,7 +29,16 @@
             <td>{{ $match->team_home }}</td>
             <td>{{ $match->team_away }}</td>
             <td>{{ $match->match_date }}</td>
-            <td>{{ $match->stadium }}</td>
+            <td>
+                @if($match->stadium)
+                    {{ $match->stadium->name }} town: {{ $match->stadium->location }}
+                @else
+                    No stadium assigned
+                @endif
+
+            </td>
+
+
         </tr>
     @endforeach
     </tbody>
