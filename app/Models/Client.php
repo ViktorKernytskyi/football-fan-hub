@@ -18,6 +18,7 @@ class Client extends Authenticatable
         'client_name',
         'email',
         'password',
+        'token',
     ];
 
     // Fields that will be hidden when converting the model to JSON - Поля, які будуть приховані при перетворенні моделі у JSON.
