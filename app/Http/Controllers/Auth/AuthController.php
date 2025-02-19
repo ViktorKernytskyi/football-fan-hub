@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 use Psy\Util\Str;
 
 class AuthController extends Controller
@@ -90,7 +91,7 @@ class AuthController extends Controller
         $client = Client::where('token', $token)->where('is_verified', 0)->first();
         if ($client) {
             $email = $client->email;
-            return view('auth.change-password', compact('email'));
+            return view('auth.change-password',  ['email' => $client->email]);
         }
         return redirect()->route('auth.forgot-password')->with('failed', 'Password reset link is expired');
     }
@@ -101,26 +102,12 @@ class AuthController extends Controller
             'email' => 'required|email',
         ]);
 
-        $client = Client::where('email', $request->email)->first();
-        if (!$client) {
-            return back()->with('failed', 'Failed! email is not registered.');
+        $status = Password::sendResetLink($request->only('email'));
+
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with(['success' => __($status)])
+            : back()->withErrors(['email' => __($status)]);
         }
-
-        $token = Str::random(60);
-
-        // Використовуємо властивості моделі
-        $client->token = $token;
-        $client->is_verified = 0;
-        $client->save();
-
-        Mail::to($request->email)->send(new ResetPassword($client->name, $token));
-
-        // Перевірка на помилки при відправці листа
-        if (count(Mail::failures()) == 0) {
-            return back()->with('success', 'Success! password reset link has been sent to your email');
-        }
-        return back()->with('failed', 'Failed! there is some issue with email provider');
-    }
 
 
     public function updatePassword()
