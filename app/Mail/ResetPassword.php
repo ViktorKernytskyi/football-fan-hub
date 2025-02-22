@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -33,8 +34,16 @@ class ResetPassword extends Mailable
      */
     public function build()
     {
-        $user['name'] = $this->name;
-        $user['token'] = $this->token;
+        // Замінили на роботу з моделлю Client
+        $client = Client::where('email', $this->name)->first(); // Заміна на пошук по email у таблиці clients
+        if ($client) {
+            $user['name'] = $client->name;
+            $user['token'] = $this->token;
+        } else {
+            // Якщо клієнт не знайдений, можна додати обробку помилки
+            $user['name'] = $this->name;
+            $user['token'] = $this->token;
+        }
 
         return $this->from("yoursenderemail@mail.com", "Sender Name")
             ->subject('Password Reset Link')
