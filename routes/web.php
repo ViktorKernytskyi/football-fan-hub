@@ -45,10 +45,10 @@ Route::prefix('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
     // Password recovery
-    Route::get('forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+    Route::get('forgot-password', [AuthController::class, 'forgotPassword'])->name('password.request');
     Route::post('forgot-password', [AuthController::class, 'resetPassword'])->name('password.email');
     Route::get('forgot-password/{token}', [AuthController::class, 'forgotPasswordValidate']);
-
+    Route::get('/reset-password', [AuthController::class, 'updatePassword'])->name('password.reset');
     // Password update
     Route::put('reset-password', [AuthController::class, 'updatePassword'])->name('reset-password');
 });
