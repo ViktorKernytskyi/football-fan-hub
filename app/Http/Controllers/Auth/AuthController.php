@@ -73,7 +73,7 @@ class AuthController extends Controller
              //   dd(session('client')); // додайте для перевірки, чи зберігаються дані користувача
 
                 // dd($request->password);
-                return redirect()->route('login')->with('success',  'Привіт, ' . $client->client_name . '! Ви успішно увійшли' . 'Success! You are logged in', );
+                return redirect()->route('login')->with('success',  'Привіт, ' . $client->client_name . '! Ви успішно увійшли' . 'Success! You are logged in');
             }
             return back()->with('failed', 'Failed! Invalid password');
         }
@@ -86,15 +86,33 @@ class AuthController extends Controller
         return view('auth.forgot-password');
     }
 
-    public function forgotPasswordValidate($token)
+    public function storeForgotPassword(Request $request)
     {
-        $client = Client::where('token', $token)->where('is_verified', 0)->first();
-        if ($client) {
-            $email = $client->email;
-            return view('auth.change-password',  ['email' => $client->email]);
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+        $status = Password::broker('clients')->sendResetLink(
+            $request->only('email')
+        );
+        if ($status === Password::RESET_LINK_SENT) {
+            return back()->with('success', trans($status));
         }
-        return redirect()->route('auth.forgot-password')->with('failed', 'Password reset link is expired');
+        return back()->withInput()->with($request->only('email'))
+                     ->withErrors(['email' => __($status)]);
     }
+
+
+
+//    public function forgotPasswordValidate($token)
+//    {
+//        $client = Client::where('token', $token)->where('is_verified', 0)->first();
+//        dd($token);
+//        if ($client) {
+//            $email = $client->email;
+//            return view('auth.change-password',  ['email' => $client->email]);
+//        }
+//        return redirect()->route('auth.forgot-password')->with('failed', 'Password reset link is expired');
+//    }
 
     public function resetPassword(Request $request)
     {
