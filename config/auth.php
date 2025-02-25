@@ -103,6 +103,12 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+        'clients' => [ // Додаємо окремий механізм для клієнтів
+            'provider' => 'clients',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
     ],
 
     /*
