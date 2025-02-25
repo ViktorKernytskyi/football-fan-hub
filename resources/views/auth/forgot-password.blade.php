@@ -17,7 +17,7 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 m-auto">
-            <form action="{{ route('forgot-password') }}" method="post" autocomplete="off">
+            <form action="{{ route('password.request') }}" method="post" autocomplete="off">
                 @csrf
                 <div class="card shadow">
 
@@ -34,7 +34,7 @@
                     @endif
 
                     <div class="card-header">
-                        <h5 class="card-title"> Forgot Password </h5>
+                        <h5 class="card-title"> Forgot your Password </h5>
                     </div>
 
                     <div class="card-body px-4">
@@ -50,7 +50,7 @@
                     </div>
 
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary"> Reset Password </button>
+                        <button type="submit" class="btn btn-primary">Send Reset Link </button>
                     </div>
                 </div>
             </form>
