@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="form-group text-end">
-                            <a href="{{ route('forgot-password') }}" class="nav-link"> Forgot Password?</a>
+                            <a href="{{ route('password.request') }}" class="nav-link"> Forgot Password?</a>
                         </div>
                     </div>
 
