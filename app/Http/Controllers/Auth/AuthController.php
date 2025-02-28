@@ -113,25 +113,50 @@ class AuthController extends Controller
 //        }
 //        return redirect()->route('auth.forgot-password')->with('failed', 'Password reset link is expired');
 //    }
-
-    public function resetPassword(Request $request)
+    public function resetPassword($token)
+    {
+        return view('auth.password.reset', ['token' => $token]);
+    }
+    public function storeResetPassword(Request $request, $token)
     {
         $request->validate([
             'email' => 'required|email',
+            'password' => 'required|confirmed|min:8',
         ]);
 
-        $status = Password::sendResetLink($request->only('email'));
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation') + ['token' => $token],
+            function ($user) use ($request) {
+                $user->forceFill([
+                    'password' => bcrypt($request->password),
+                ])->save();
+            }
+        );
 
-        return $status === Password::RESET_LINK_SENT
-            ? back()->with(['success' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
-        }
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('success', 'Password has been reset!')
+            : back()->withErrors(['email' => [__($status)]]);
+    }
+
+//    public function storeResetPassword(Request $request)
+//    {
+//        $request->validate([
+//            'email' => 'required|email',
+//        ]);
+//
+//        $status = Password::sendResetLink($request->only('email'));
+//
+//        return $status === Password::RESET_LINK_SENT
+//            ? back()->with(['success' => __($status)])
+//            : back()->withErrors(['email' => __($status)]);
+//        }
 
 
     public function updatePassword()
     {
         return view('auth.reset-password');
     }
+
     public function logout(Request $request)
     {
         Auth::guard('client')->logout();
