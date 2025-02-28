@@ -48,9 +48,13 @@ Route::prefix('auth')->group(function () {
     Route::get('forgot-password', [AuthController::class, 'forgotPassword'])->name('password.request');
     Route::post('forgot-password', [AuthController::class, 'storeForgotPassword'])->name('password.email');
     //Route::get('forgot-password/{token}', [AuthController::class, 'forgotPasswordValidate']);
-    Route::get('/reset-password', [AuthController::class, 'storeForgotPassword'])->name('password.reset');
+
     // Password update
-    //Route::put('reset-password', [AuthController::class, 'updatePassword'])->name('reset-password');
+
+    Route::get('/reset-password/{token}', [AuthController::class, 'resetPassword'])->name('password.reset');
+    Route::post('/reset-password/{token}', [AuthController::class, 'storeResetPassword'])->name('password.update');
+    Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
+
 });
 
 
