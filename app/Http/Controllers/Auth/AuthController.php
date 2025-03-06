@@ -113,17 +113,22 @@ class AuthController extends Controller
 //        }
 //        return redirect()->route('auth.forgot-password')->with('failed', 'Password reset link is expired');
 //    }
-    public function resetPassword($token)
+    public function resetPassword($token, $email)
     {
-        return view('auth.password.reset', ['token' => $token]);
+        return view('auth.password.reset', [
+            'token' => $token,
+            'email' => $email
+        ]);
     }
-    public function storeResetPassword(Request $request, $token)
+    public function storeResetPassword(Request $request, $token, $email)
     {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|confirmed|min:8',
         ]);
-
+        if ($request->email !== $email) {
+            return back()->withErrors(['email' => 'Email does not match the token.']);
+        }
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation') + ['token' => $token],
             function ($user) use ($request) {
@@ -170,6 +175,13 @@ class AuthController extends Controller
     public function registerForm()
     {
         return view('auth.register');
+    }
+    public function showResetPasswordForm($token, $email)
+    {
+        return view('auth.password.reset', [
+            'token' => $token,
+            'email' => $email,
+        ]);
     }
 
 }

@@ -17,7 +17,7 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 m-auto">
-            <form action="{{ route('password.request') }}" method="post" autocomplete="off">
+            <form action="{{ route('password.reset.form') }}" method="post" autocomplete="off">
                 @csrf
                 <div class="card shadow">
 

@@ -51,9 +51,14 @@ Route::prefix('auth')->group(function () {
 
     // Password update
 
-    Route::get('/reset-password/{token}', [AuthController::class, 'resetPassword'])->name('password.reset');
-    Route::post('/reset-password/{token}', [AuthController::class, 'storeResetPassword'])->name('password.update');
+
+    Route::post('/reset-password/{token}/email/{email}', [AuthController::class, 'storeResetPassword'])->name('password.update.token');
+    Route::post('/reset-password/{token}', [AuthController::class, 'resetPassword'])->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
+    Route::get('/reset-password/{token}/{email}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset.form');
+    Route::get('/reset-password/{token}', function (string $token) {
+        return view('auth.reset-password', ['token' => $token]);
+    })->middleware('guest')->name('password.reset');
 
 });
 

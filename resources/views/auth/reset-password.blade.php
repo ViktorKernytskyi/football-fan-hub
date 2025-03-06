@@ -14,7 +14,7 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 m-auto">
-            <form action="{{ route('password.reset', ['token' => $token]) }}" method="post" autocomplete="off">
+            <form action="{{ route('password.update.token', ['token' => $token]) }}" method="POST" autocomplete="off">
                 @csrf
                 @method('POST')
                 <div class="card shadow">
@@ -47,8 +47,8 @@
 
                         <div class="form-group py-2">
                             <label> Confirm Password </label>
-                            <input type="password" name="confirm_password" class="form-control {{$errors->first('confirm_password') ? 'is-invalid' : ''}}" value="{{ old('confirm_password') }}" placeholder="Confirm Password">
-                            {!! $errors->first('confirm_password', '<div class="invalid-feedback">:message</div>') !!}
+                            <input type="password" name="password_confirmation" class="form-control {{$errors->first('password_confirmation') ? 'is-invalid' : ''}}" value="{{ old('password_confirmation') }}" placeholder="Confirm Password">
+                            {!! $errors->first('password_confirmation', '<div class="invalid-feedback">:message</div>') !!}
                         </div>
                     </div>
 
