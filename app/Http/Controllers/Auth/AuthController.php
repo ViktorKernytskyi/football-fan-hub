@@ -138,8 +138,8 @@ class AuthController extends Controller
             }
         );
 
-        return $status === Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('success', 'Password has been reset!')
+        return $status === Password::RESET_LINK_SENT
+            ? redirect()->route('login')->with('success', 'Success! Password reset link has been sent to your email.')
             : back()->withErrors(['email' => [__($status)]]);
     }
 
@@ -157,9 +157,29 @@ class AuthController extends Controller
 //        }
 
 
-    public function updatePassword()
+    public function updatePassword($request)
     {
-        return view('auth.reset-password');
+        // Валідація введених даних
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        // Оновлення пароля
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                ])->save();
+            }
+        );
+
+        // Перевіряємо результат
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('login_1')->with('success', 'Success! Password has been changed.')
+            : back()->with('failed', 'Failed! Unable to reset password.');
+        //return view('auth.reset-password');
     }
 
     public function logout(Request $request)
