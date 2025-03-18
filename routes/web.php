@@ -52,7 +52,7 @@ Route::prefix('auth')->group(function () {
     // Password update
 
     Route::get('/password/reset/{token}/{email?}', [AuthController::class, 'resetPassword'])->name('password.reset');
-    Route::post('/password/reset/{token}/{email}', [AuthController::class, 'storeResetPassword'])->name('password.update');
+   // Route::post('/password/reset/{token}/{email}', [AuthController::class, 'storeResetPassword'])->name('password.update');
 
     Route::post('/password/reset/{token}/{email}', [AuthController::class, 'updatePassword'])->name('password.update');
 

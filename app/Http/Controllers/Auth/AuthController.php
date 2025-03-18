@@ -168,7 +168,7 @@ class AuthController extends Controller
         // Оновлення пароля
         $status = Password::reset(
             [
-                'email' => $email,
+                'email' => $request->email,
                 'password' => $request->password,
                 'password_confirmation' => $request->password_confirmation,
                 'token' => $token
