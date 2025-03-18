@@ -45,21 +45,13 @@ Route::prefix('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
     // Password recovery
-    Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.reset.form');
     Route::post('forgot-password', [AuthController::class, 'resetPassword'])->name('password.email');
     //Route::get('forgot-password/{token}', [AuthController::class, 'forgotPasswordValidate']);
 
     // Password update
 
 
-    Route::post('/reset-password/{token}/email/{email}', [AuthController::class, 'storeResetPassword'])->name('password.update.token');
-    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
-    // Обробка оновлення пароля
-    Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
-    Route::get('/reset-password/{token}/{email}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset.form');
-    Route::get('/reset-password/{token}', function (string $token) {
-        return view('auth.reset-password', ['token' => $token]);
-    })->middleware('guest')->name('password.reset');
 
 });
 

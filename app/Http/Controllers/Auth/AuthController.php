@@ -81,7 +81,7 @@ class AuthController extends Controller
     }
 
 
-    public function forgotPassword()
+    public function showForgotPasswordForm()
     {
         return view('auth.forgot-password');
     }
