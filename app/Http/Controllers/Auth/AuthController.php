@@ -113,7 +113,7 @@ class AuthController extends Controller
 //        }
 //        return redirect()->route('auth.forgot-password')->with('failed', 'Password reset link is expired');
 //    }
-    public function resetPassword($token, $email)
+    public function resetPassword($token, $email = null)
     {
         return view('auth.password.reset', [
             'token' => $token,
@@ -157,7 +157,7 @@ class AuthController extends Controller
 //        }
 
 
-    public function updatePassword($request)
+    public function updatePassword(Request $request, $token, $email)
     {
         // Валідація введених даних
         $request->validate([
@@ -167,7 +167,12 @@ class AuthController extends Controller
 
         // Оновлення пароля
         $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation'),
+            [
+                'email' => $email,
+                'password' => $request->password,
+                'password_confirmation' => $request->password_confirmation,
+                'token' => $token
+            ],
             function ($user, $password) {
                 $user->forceFill([
                     'password' => Hash::make($password),
@@ -177,7 +182,7 @@ class AuthController extends Controller
 
         // Перевіряємо результат
         return $status === Password::PASSWORD_RESET
-            ? redirect()->route('login_1')->with('success', 'Success! Password has been changed.')
+            ? redirect()->route('login')->with('success', 'Success! Password has been changed.')
             : back()->with('failed', 'Failed! Unable to reset password.');
         //return view('auth.reset-password');
     }
