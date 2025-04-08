@@ -42,7 +42,7 @@ Route::prefix('auth')->middleware('guest')->group(function () {
     Route::post('login', [AuthController::class, 'loginValidate'])->name('login');
 
     // Entrance - Вихід
-    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
     //  Password Reset - Step 1: Show Forgot Password Form
     Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
