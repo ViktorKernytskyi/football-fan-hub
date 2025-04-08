@@ -32,43 +32,32 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 
-Route::prefix('auth')->group(function () {
+Route::prefix('auth')->middleware('guest')->group(function () {
     // Registration
-    Route::get('register', [AuthController::class, 'registerForm'])->name('register');
+    Route::get('register', [AuthController::class, 'registerForm'])->name('register.form');
     Route::post('register', [AuthController::class, 'register'])->name('register');
 
     // Login
-    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login.form');
     Route::post('login', [AuthController::class, 'loginValidate'])->name('login');
 
     // Entrance - Вихід
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-    // Password recovery
-    Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.reset.form');
-    Route::post('forgot-password', [AuthController::class, 'resetPassword'])->name('password.email');
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.request');
+    //  Password Reset - Step 1: Show Forgot Password Form
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+    // Password Reset - Step 2: Send Reset Link
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 
-    //Route::get('forgot-password/{token}', [AuthController::class, 'forgotPasswordValidate']);
-
-    // Password update
-
-    Route::get('/password/reset/{token}/{email?}', [AuthController::class, 'resetPassword'])->name('password.reset');
-   // Route::post('/password/reset/{token}/{email}', [AuthController::class, 'storeResetPassword'])->name('password.update');
-
-    Route::post('/password/reset/{token}/{email}', [AuthController::class, 'updatePassword'])->name('password.update');
-
-    Route::post('/reset-password/{token}/email/{email}', [AuthController::class, 'storeResetPassword'])->name('password.update.token');
+    // Password Reset - Step 3: Show Reset Form with Token
     Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
-    // Обробка оновлення пароля
+    // Password Reset - Step 4: Update Password
     Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
-    Route::get('/reset-password/{token}/{email}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset.form');
-//    Route::get('/reset-password/{token}', function (string $token) {
-//        return view('auth.reset-password', ['token' => $token]);
-//    })->middleware('guest')->name('password.reset');
+    // Password update...
+    Route::get('/password/reset/{token}', [AuthController::class, 'resetPassword'])->name('password.reset');
+    Route::post('/password/reset/{token}', [AuthController::class, 'updatePassword'])->name('password.update');
 
 });
-
 
 
 
