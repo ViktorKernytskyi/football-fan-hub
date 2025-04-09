@@ -157,7 +157,7 @@ class AuthController extends Controller
 //        }
 
 
-    public function updatePassword(Request $request, $token, $email)
+    public function updatePassword(Request $request, $token)
     {
         // Валідація введених даних
         $request->validate([
