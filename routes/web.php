@@ -47,7 +47,7 @@ Route::prefix('auth')->middleware('guest')->group(function () {
     //  Password Reset - Step 1: Show Forgot Password Form
     Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
     // Password Reset - Step 2: Send Reset Link
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+    Route::post('/forgot-password', [AuthController::class, 'storeForgotPassword'])->name('password.email');
 
     // Password Reset - Step 3: Show Reset Form with Token
     Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
