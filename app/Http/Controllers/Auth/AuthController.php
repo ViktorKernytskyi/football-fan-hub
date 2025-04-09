@@ -2,23 +2,20 @@
 
 namespace App\Http\Controllers\Auth;
 
-
-use Illuminate\View\View;
-namespace App\Http\Controllers\Auth;
-
 use App\Http\Controllers\Controller;
 use App\Models\Client;
-use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
-use Psy\Util\Str;
 
 class AuthController extends Controller
 {
+    /**
+     * Показати форму входу
+     */
     public function showLoginForm()
     {
         return view('auth.login');
@@ -41,16 +38,18 @@ class AuthController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        //Auth::login($client); // Автоматичний вхід після реєстрації
-
         return redirect()->route('login')->withErrors('success', 'Registration successful! You are logged in.');
     }
-
+    /**
+     * Показати форму для входу
+     */
     public function login()
     {
         return view('auth.login');
     }
-
+    /**
+     * Валідація даних для входу
+     */
     public function loginValidate(Request $request)
     {
         $request->validate([
@@ -63,8 +62,7 @@ class AuthController extends Controller
         if ($client) {
 
             if (Hash::check($request->password, $client->password)) {
-                //auth()->login($client);
-               // auth()->loginUsingId($client->id);
+
                 //dd(Auth::guard('client')->user());
 
                 auth()->guard('client')->loginUsingId($client->id);
@@ -80,12 +78,16 @@ class AuthController extends Controller
         return back()->with('failed', 'Failed! Invalid email');
     }
 
-
+    /**
+     * Показати форму для відновлення пароля
+     */
     public function showForgotPasswordForm()
     {
         return view('auth.forgot-password');
     }
-
+    /**
+     * Відправити посилання для скидання пароля
+     */
     public function storeForgotPassword(Request $request)
     {
         $request->validate([
@@ -101,18 +103,9 @@ class AuthController extends Controller
                      ->withErrors(['email' => __($status)]);
     }
 
-
-
-//    public function forgotPasswordValidate($token)
-//    {
-//        $client = Client::where('token', $token)->where('is_verified', 0)->first();
-//        dd($token);
-//        if ($client) {
-//            $email = $client->email;
-//            return view('auth.change-password',  ['email' => $client->email]);
-//        }
-//        return redirect()->route('auth.forgot-password')->with('failed', 'Password reset link is expired');
-//    }
+    /**
+     * Показати форму для скидання пароля
+     */
     public function resetPassword($token, $email = null)
     {
         return view('auth.password.reset', [
@@ -120,6 +113,9 @@ class AuthController extends Controller
             'email' => $email
         ]);
     }
+    /**
+     * Зберегти новий пароль після скидання
+     */
     public function storeResetPassword(Request $request, $token, $email)
     {
         $request->validate([
@@ -143,20 +139,9 @@ class AuthController extends Controller
             : back()->withErrors(['email' => [__($status)]]);
     }
 
-//    public function storeResetPassword(Request $request)
-//    {
-//        $request->validate([
-//            'email' => 'required|email',
-//        ]);
-//
-//        $status = Password::sendResetLink($request->only('email'));
-//
-//        return $status === Password::RESET_LINK_SENT
-//            ? back()->with(['success' => __($status)])
-//            : back()->withErrors(['email' => __($status)]);
-//        }
-
-
+    /**
+     * Оновити пароль
+     */
     public function updatePassword(Request $request, $token)
     {
         // Валідація введених даних
@@ -186,7 +171,9 @@ class AuthController extends Controller
             : back()->with('failed', 'Failed! Unable to reset password.');
         //return view('auth.reset-password');
     }
-
+    /**
+     * Вийти з акаунту
+     */
     public function logout(Request $request)
     {
         Auth::guard('client')->logout();
@@ -196,11 +183,16 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
-
+    /**
+     * Показати форму реєстрації
+     */
     public function registerForm()
     {
         return view('auth.register');
     }
+    /**
+     * Показати форму для скидання пароля
+     */
     public function showResetPasswordForm($token, $email)
     {
         return view('auth.password.reset', [
