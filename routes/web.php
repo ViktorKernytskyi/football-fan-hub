@@ -54,8 +54,8 @@ Route::prefix('auth')->middleware('guest')->group(function () {
     // Password Reset - Step 4: Update Password
     Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
     // Password update...
-    Route::get('/password/reset/{token}', [AuthController::class, 'resetPassword'])->name('password.reset');
-    Route::post('/password/reset/{token}', [AuthController::class, 'updatePassword'])->name('password.update');
+//    Route::get('/password/reset/{token}', [AuthController::class, 'resetPassword'])->name('password.reset');
+//    Route::post('/password/reset/{token}', [AuthController::class, 'updatePassword'])->name('password.update');
 
 });
 
