@@ -127,9 +127,9 @@ class AuthController extends Controller
         }
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation') + ['token' => $token],
-            function ($user) use ($request) {
+            function ($user, $password) use ($request) {
                 $user->forceFill([
-                    'password' => bcrypt($request->password),
+                    'password' => Hash::make($password),
                 ])->save();
             }
         );
@@ -142,22 +142,25 @@ class AuthController extends Controller
     /**
      * Оновити пароль
      */
-    public function updatePassword(Request $request, $token)
+    public function updatePassword(Request $request)
     {
         // Валідація введених даних
         $request->validate([
+            'token' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:6|confirmed',
         ]);
 
         // Оновлення пароля
-        $status = Password::reset(
-            [
-                'email' => $request->email,
-                'password' => $request->password,
-                'password_confirmation' => $request->password_confirmation,
-                'token' => $token
-            ],
+        $status = Password::broker('clients')->reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+//        $status = Password::reset(
+//            [
+//                'email' => $request->email,
+//                'password' => $request->password,
+//                'password_confirmation' => $request->password_confirmation,
+//                'token' => $token
+//            ],
             function ($user, $password) {
                 $user->forceFill([
                     'password' => Hash::make($password),
@@ -169,8 +172,7 @@ class AuthController extends Controller
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('login')->with('success', 'Success! Password has been changed.')
             : back()->with('failed', 'Failed! Unable to reset password.');
-        //return view('auth.reset-password');
-    }
+          }
     /**
      * Вийти з акаунту
      */
@@ -193,12 +195,18 @@ class AuthController extends Controller
     /**
      * Показати форму для скидання пароля
      */
-    public function showResetPasswordForm($token, $email)
+//    public function showResetPasswordForm($token, $email)
+//    {
+//        return view('auth.password.reset', [
+//            'token' => $token,
+//            'email' => $email,
+//        ]);
+//    }
+    public function showResetPasswordForm(string $token)
     {
-        return view('auth.password.reset', [
-            'token' => $token,
-            'email' => $email,
-        ]);
+        $email = request()->query('email'); // Отримуємо email з URL (наприклад: ?email=user@example.com)
+
+        return view('auth.reset-password', compact('token', 'email'));
     }
 
 }
