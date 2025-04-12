@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
+    // --------------------------------------
+    // 1. Методи для відображення форм
+    // --------------------------------------
     /**
      * Показати форму входу
      */
@@ -20,7 +23,51 @@ class AuthController extends Controller
     {
         return view('auth.login');
     }
+    /**
+     * Показати форму для входу
+     */
+    public function login()
+    {
+        return view('auth.login');
+    }
+    /**
+     * Показати форму реєстрації
+     */
+    public function registerForm()
+    {
+        return view('auth.register');
+    }
+    /**
+     * Показати форму для відновлення пароля
+     */
+    public function showForgotPasswordForm()
+    {
+        return view('auth.forgot-password');
+    }
+    /**
+     * Показати форму для скидання пароля
+     */
+    public function resetPassword($token, $email = null)
+    {
+        return view('auth.password.reset', [
+            'token' => $token,
+            'email' => $email
+        ]);
+    }
+    /**
+     * Показати форму для скидання пароля
+     */
 
+    public function showResetPasswordForm(string $token)
+    {
+        $email = request()->query('email'); // Отримуємо email з URL (наприклад: ?email=user@example.com)
+
+        return view('auth.reset-password', compact('token', 'email'));
+    }
+
+    // --------------------------------------
+    // 2. Методи для роботи з реєстрацією та входом
+    // --------------------------------------
     /**
      * Register a new user
      */
@@ -38,15 +85,9 @@ class AuthController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        return redirect()->route('login')->withErrors('success', 'Registration successful! You are logged in.');
+        return redirect()->route('login')->with('success', 'Registration successful! You are logged in.');
     }
-    /**
-     * Показати форму для входу
-     */
-    public function login()
-    {
-        return view('auth.login');
-    }
+
     /**
      * Валідація даних для входу
      */
@@ -78,13 +119,10 @@ class AuthController extends Controller
         return back()->with('failed', 'Failed! Invalid email');
     }
 
-    /**
-     * Показати форму для відновлення пароля
-     */
-    public function showForgotPasswordForm()
-    {
-        return view('auth.forgot-password');
-    }
+    // --------------------------------------
+    // 3. Методи для скидання пароля
+    // --------------------------------------
+
     /**
      * Відправити посилання для скидання пароля
      */
@@ -103,16 +141,6 @@ class AuthController extends Controller
                      ->withErrors(['email' => __($status)]);
     }
 
-    /**
-     * Показати форму для скидання пароля
-     */
-    public function resetPassword($token, $email = null)
-    {
-        return view('auth.password.reset', [
-            'token' => $token,
-            'email' => $email
-        ]);
-    }
     /**
      * Зберегти новий пароль після скидання
      */
@@ -139,6 +167,9 @@ class AuthController extends Controller
             : back()->withErrors(['email' => [__($status)]]);
     }
 
+    // --------------------------------------
+    // 4. Методи для оновлення пароля
+    // --------------------------------------
     /**
      * Оновити пароль
      */
@@ -154,13 +185,7 @@ class AuthController extends Controller
         // Оновлення пароля
         $status = Password::broker('clients')->reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-//        $status = Password::reset(
-//            [
-//                'email' => $request->email,
-//                'password' => $request->password,
-//                'password_confirmation' => $request->password_confirmation,
-//                'token' => $token
-//            ],
+
             function ($user, $password) {
                 $user->forceFill([
                     'password' => Hash::make($password),
@@ -172,7 +197,11 @@ class AuthController extends Controller
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('login')->with('success', 'Success! Password has been changed.')
             : back()->with('failed', 'Failed! Unable to reset password.');
-          }
+
+    }
+    // --------------------------------------
+    // 5. Вихід з акаунту
+    // --------------------------------------
     /**
      * Вийти з акаунту
      */
@@ -183,30 +212,6 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
-    }
-
-    /**
-     * Показати форму реєстрації
-     */
-    public function registerForm()
-    {
-        return view('auth.register');
-    }
-    /**
-     * Показати форму для скидання пароля
-     */
-//    public function showResetPasswordForm($token, $email)
-//    {
-//        return view('auth.password.reset', [
-//            'token' => $token,
-//            'email' => $email,
-//        ]);
-//    }
-    public function showResetPasswordForm(string $token)
-    {
-        $email = request()->query('email'); // Отримуємо email з URL (наприклад: ?email=user@example.com)
-
-        return view('auth.reset-password', compact('token', 'email'));
     }
 
 }
