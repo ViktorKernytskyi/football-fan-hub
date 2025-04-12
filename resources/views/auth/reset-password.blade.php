@@ -14,9 +14,8 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 m-auto">
-            <form action="{{ route('password.update.token', ['token' => $token]) }}" method="POST" autocomplete="off">
+            <form action="{{ route('password.update', ['token' => $token]) }}" method="POST" autocomplete="off">
                 @csrf
-                @method('POST')
                 <div class="card shadow">
 
                     @if (Session::has("success"))
@@ -37,7 +36,7 @@
 
                     <div class="card-body px-4">
                         <input type="hidden" name="token" value="{{ $token }}">
-                        <input type="hidden" name="email" value="{{ $email }} "/>
+                        <input type="hidden" name="email" value="{{ $email }}"/>
 
                         <div class="form-group py-2">
                             <label> Password </label>
