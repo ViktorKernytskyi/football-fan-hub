@@ -41,4 +41,26 @@ class Ticket extends Model
         $soldTickets = self::soldTickets($matchId);
         return $seatCount - $soldTickets;
     }
+    //  Метод для покупки квитка
+    public function purchaseBy($clientId)
+    {
+        if ($this->client_id !== null) {
+            throw new \Exception('Цей квиток вже придбано.');
+        }
+
+        $this->update([
+            'client_id' => $clientId,
+        ]);
+    }
+
+    //  Метод для створення нового квитка для користувача (наприклад, адміністратора)
+    public static function createForUser(array $data): self
+    {
+        return self::create([
+            'match_id' => $data['match_id'],
+            'client_id' => $data['client_id'], // або null, якщо ще не продано
+            'seat_number' => $data['seat_number'] ?? null,
+            'price' => $data['price'] ?? 20, // якщо не вказано — фіксована ціна
+        ]);
+    }
 }
