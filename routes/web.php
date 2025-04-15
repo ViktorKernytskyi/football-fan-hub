@@ -27,6 +27,13 @@ Route::put('/tickets/{id}', [TicketController::class, 'update'])->name('tickets.
 Route::delete('/tickets/{id}', [TicketController::class, 'destroy'])->name('tickets.destroy');
 Route::post('/tickets/{id}/purchase', [TicketController::class, 'purchase'])->name('tickets.purchase');
 
+// Додаємо новий маршрут для показу сторінки покупки квитків
+Route::get('/tickets/buy', [TicketController::class, 'buyTickets'])->name('tickets.buyPage');
+
+// Маршрут для обробки покупки квитка
+Route::post('/tickets/buy', [TicketController::class, 'buy'])->name('tickets.buy');
+
+
 
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
