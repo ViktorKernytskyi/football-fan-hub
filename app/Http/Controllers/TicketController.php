@@ -35,7 +35,12 @@ class TicketController extends Controller
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }
-
+    // Метод для відображення сторінки покупки квитків
+    public function buyTickets()
+    {
+        $tickets = Ticket::where('client_id', Auth::id())->with('match')->get();
+        return view('tickets.tickets_buy', compact('tickets'));
+    }
     // Купівля нових квитків
     public function buy(Request $request)
     {
