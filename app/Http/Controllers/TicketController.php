@@ -38,7 +38,7 @@ class TicketController extends Controller
     // Метод для відображення сторінки покупки квитків
     public function buyTickets()
     {
-        $tickets = Ticket::where('client_id', Auth::id())->with('match')->get();
+        $tickets = Ticket::where('client_id')->with('match')->get();
         return view('tickets.tickets_buy', compact('tickets'));
     }
     // Купівля нових квитків
