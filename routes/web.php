@@ -22,7 +22,7 @@ Route::post('/clients', [ClientController::class, 'store'])->name('clients.store
 
 Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
 Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
-Route::get('/tickets/{id}', [TicketController::class, 'show'])->name('tickets.show');
+//Route::get('/tickets/{id}', [TicketController::class, 'show'])->name('tickets.show');
 Route::put('/tickets/{id}', [TicketController::class, 'update'])->name('tickets.update');
 Route::delete('/tickets/{id}', [TicketController::class, 'destroy'])->name('tickets.destroy');
 Route::post('/tickets/{id}/purchase', [TicketController::class, 'purchase'])->name('tickets.purchase');
