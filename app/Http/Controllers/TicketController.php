@@ -39,30 +39,43 @@ class TicketController extends Controller
     public function buyTickets()
     {
         $tickets = Ticket::where('client_id')->with('match')->get();
-        return view('tickets.tickets_buy', compact('tickets'));
+        $matches = FootballMatch::all();
+        return view('tickets.tickets_buy', compact('tickets', 'matches'));
     }
     // Купівля нових квитків
     public function buy(Request $request)
     {
+       dd($request->all());
         $request->validate([
             'match_id' => 'required|exists:matches,id',
             'quantity' => 'required|integer|min:1',
         ]);
-
-       // $match = FootballMatch::find($request->match_id);
+        // Знаходимо матч за його ID
+        $match = FootballMatch::find($request->match_id);
         $pricePerTicket = 20; // Фіксована ціна за квиток
 
-        // Створення квитка
-        for ($i = 0; $i < $request->quantity; $i++) {
+        // Логіка генерації місць
+        // Для простоти припустимо, що є поле "seat_number" з номерами місць
+        $seatNumbers = $this->generateSeatNumbers($request->quantity); // Метод для генерації місць
+
+        // Створення квитків для кожного місця
+        foreach ($seatNumbers as $seatNumber) {
             Ticket::create([
                 'client_id' => Auth::id(),
                 'match_id' => $request->match_id,
-                'quantity' => $request->quantity,
-                'total_price' => $pricePerTicket * $request->quantity,
+                'seat_number' => $seatNumber,
                 'price' => $pricePerTicket,
             ]);
         }
         return redirect()->route('tickets.index')->with('success', 'Квитки успішно придбані!');
     }
-
+        // Метод для генерації номери місць (можна додати складнішу логіку)
+       private function generateSeatNumbers($quantity)
+      {
+        $seatNumbers = [];
+        for ($i = 1; $i <= $quantity; $i++) {
+            $seatNumbers[] = 'Seat ' . ($i); // Простий формат для місця
+        }
+        return $seatNumbers;
+    }
 }
