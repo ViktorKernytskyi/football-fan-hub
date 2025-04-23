@@ -50,6 +50,9 @@
             <td>{{ $ticket->match->team_home }} vs {{ $ticket->match->team_away }}</td>
             <td>{{ $ticket->seat_number ?? 'N/A' }}</td>
             <td>{{ $ticket->price ?? 'N/A' }}</td>
+            <td>{{ $ticket->quantity }}</td>
+            <td>{{ $ticket->total_price }}</td>
+
             <td>
                 @if($ticket->client_id === null)
                     <form method="POST" action="{{ route('tickets.purchase', $ticket->id) }}">
