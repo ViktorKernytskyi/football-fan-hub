@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\FootballMatch;
 use App\Models\Ticket;
-use Illuminate\Container\Attributes\Auth;
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -20,7 +21,7 @@ class TicketController extends Controller
     {
         $tickets = Ticket::where('client_id', Auth::id())->with('match')->get();
 
-        return view('tickets.index', compact('tickets'));
+        return view('tickets.index', 'tickets.tickets_buy',compact('tickets'));
     }
 
     // Метод для покупки квитка
@@ -37,15 +38,23 @@ class TicketController extends Controller
     }
     // Метод для відображення сторінки покупки квитків
     public function buyTickets()
-    {
-        $tickets = Ticket::where('client_id')->with('match')->get();
+
+   {
+//$userId = Auth::id();
+//        dd($userId);
+        $tickets = Ticket::where('client_id', Auth::id())->with('match')->get();
+        //dd($tickets);
         $matches = FootballMatch::all();
-        return view('tickets.tickets_buy', compact('tickets', 'matches'));
+        return view('tickets.tickets_buy',  compact('tickets', 'matches'));
     }
     // Купівля нових квитків
     public function buy(Request $request)
     {
-       dd($request->all());
+       //dd($request->all());
+//        if (!Auth::check()) {
+//            return redirect()->route('login')->withErrors(['error' => 'Спочатку увійдіть у систему.']);
+//        }
+
         $request->validate([
             'match_id' => 'required|exists:matches,id',
             'quantity' => 'required|integer|min:1',
