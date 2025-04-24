@@ -28,7 +28,9 @@ Route::delete('/tickets/{id}', [TicketController::class, 'destroy'])->name('tick
 Route::post('/tickets/{id}/purchase', [TicketController::class, 'purchase'])->name('tickets.purchase');
 
 // Додаємо новий маршрут для показу сторінки покупки квитків
-Route::get('/tickets/buy', [TicketController::class, 'buyTickets'])->name('tickets.buyPage');
+Route::get('/tickets/buy', [TicketController::class, 'buyTickets'])
+    //->middleware(middleware: ['auth'])
+    ->name('tickets.buyPage');
 
 // Маршрут для обробки покупки квитка
 Route::post('/tickets/buy', [TicketController::class, 'buy'])->name('tickets.buy');
