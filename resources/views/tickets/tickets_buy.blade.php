@@ -7,6 +7,16 @@
 </head>
 <body>
 <h1>Buy Tickets</h1>
+<div class="col-sm-8">
+    <div class="menu pull-right">
+        <ul class="nav navbar-nav ms-auto">
+            <li><a href="{{ route('matches.home') }}"><i class="fa fa-crosshairs"></i>Upcoming Matches</a></li>
+            <li><a href="{{ route('matches.index') }}"><i class="fa fa-crosshair"></i> Match Schedule</a></li>
+            <li><a href="{{ route('news.index') }}"><i class="fa fa-crosshairs"></i> Latest Football News</a></li>
+            <li><a href="{{ route('tickets.index') }}"><i class="fa fa-crosshairs"></i> My Tickets</a></li>
+        </ul>
+    </div>
+</div>
 
 {{-- Повідомлення про успішні операції або помилки --}}
 @if(session('success'))
@@ -21,7 +31,7 @@
     @csrf
     <label>Оберіть матч:</label>
     <select name="match_id" required>
-        @foreach(\App\Models\FootballMatch::all() as $match)
+        @foreach($matches as $match)
             <option value="{{ $match->id }}">{{ $match->team_home }} vs {{ $match->team_away }} ({{ $match->date }})</option>
         @endforeach
     </select>
@@ -42,6 +52,8 @@
         <th>Seat Number</th>
         <th>Price</th>
         <th>Дія</th>
+        <th>quantity</th>
+        <th>total_price</th>
     </tr>
     </thead>
     <tbody>
@@ -50,8 +62,8 @@
             <td>{{ $ticket->match->team_home }} vs {{ $ticket->match->team_away }}</td>
             <td>{{ $ticket->seat_number ?? 'N/A' }}</td>
             <td>{{ $ticket->price ?? 'N/A' }}</td>
-            <td>{{ $ticket->quantity }}</td>
-            <td>{{ $ticket->total_price }}</td>
+            <td>{{ $ticket->quantity ?? 1 }}</td>
+            <td>{{ $ticket->total_price ?? $ticket->price }}</td>
 
             <td>
                 @if($ticket->client_id === null)
@@ -67,5 +79,6 @@
     @endforeach
     </tbody>
 </table>
+
 </body>
 </html>
