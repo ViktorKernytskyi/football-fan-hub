@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => env('DB_CONNECTION', 'mysqll'),
 
     /*
     |--------------------------------------------------------------------------
@@ -31,16 +31,16 @@ return [
 
     'connections' => [
 
-        'sqlite' => [
-            'driver' => 'sqlite',
-            'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
-            'prefix' => '',
-            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-            'busy_timeout' => null,
-            'journal_mode' => null,
-            'synchronous' => null,
-        ],
+//        'sqlite' => [
+//            'driver' => 'sqlite',
+//            'url' => env('DB_URL'),
+//            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+//            'prefix' => '',
+//            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+//            'busy_timeout' => null,
+//            'journal_mode' => null,
+//            'synchronous' => null,
+//        ],
 
         'mysql' => [
             'driver' => 'mysql',
@@ -48,7 +48,7 @@ return [
             'host' => env('DB_HOST', '127.127.126.26'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'football_hub'),
-            'username' => env('DB_USERNAME', 'root'),
+            'username' => env('DB_USERNAME', 'viktor'),
             'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
